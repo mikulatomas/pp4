@@ -26,6 +26,8 @@ Ty budeme za běhu programu překládat do jazyka stroje a vykonávat.
 
 (setf dspec:*redefinition-action* :warn)
 
+;; (vysvětlení k proměnné dspec:*redefinition-action* viz v souboru 01_stacks_2.lisp)
+
 
 ;; Účelem tohoto souboru je definovat funkci compile-scheme
 ;; Zavedeme čtyři spec. operátory (jako v prosinci)
@@ -36,20 +38,25 @@ Ty budeme za běhu programu překládat do jazyka stroje a vykonávat.
 
 ;; Kompilace schemového výrazu do podprogramu
 ;; a jeho uložení na programový zásobník
+
 (defun compile-and-push (expr)
   (push (compile-scheme expr) *exec*))
+
 
 ;; Kompilace schemového výrazu do podprogramu
 ;; Funkce je čistě funkcionální. Na vstupu přijímá 
 ;; výraz ve Scheme, vrací podprogram zásobníkového 
 ;; jazyka (obvykle proceduru). 
+
 (defun compile-scheme (expr)
   (compile-op (car expr) (cdr expr)))
+
 
 ;; Vlastní kompilace je rozdělena podle operátorů.
 
 (defmethod compile-op ((op (eql 'quote)) args)
   (sub :noexec (car args)))
+
 
 #|
 (compile-scheme '(quote abc))
@@ -135,7 +142,7 @@ Ty budeme za běhu programu překládat do jazyka stroje a vykonávat.
 (defmethod compile-op ((op (eql 'set!)) args)
   (let ((var (first args))
         (expr (second args)))
-    (sub expr :set! var var)))
+    (sub expr :dup :set! var)))
 
 #|
 (compile-scheme '(set! a (+ 3 3)))
@@ -145,6 +152,7 @@ Ty budeme za běhu programu překládat do jazyka stroje a vykonávat.
   (sub (apply #'sub args)
         op
         :exec))
+
 
 #|
 
@@ -216,5 +224,7 @@ Ty budeme za běhu programu překládat do jazyka stroje a vykonávat.
 (execute '(fact 5))
 
 |#
+
+
 
 

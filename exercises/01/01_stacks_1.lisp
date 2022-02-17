@@ -167,16 +167,20 @@
 (defmethod exec-elem (elem)
   (error "Unknown element on exec stack: ~s" elem))
 
-(defmethod exec-elem ((elem symbol))
-  (if (wordp elem)
-      (exec-word elem)
-    (call-next-method)))
-
 (defmethod exec-elem ((elem number))
   (push elem *rslt*))
 
 (defmethod exec-elem ((elem string))
   (push elem *rslt*))
+
+
+(defmethod exec-elem ((elem symbol))
+  (if (wordp elem)
+      (exec-word elem)
+    (call-next-method)))
+
+
+
 
 ;; Celý program
 ;; Tady vytváříme vazby proměnných *rslt* a *exec*.
@@ -253,5 +257,7 @@
 ;; tisk
 (execute 5 :print)
 |#
+
+
 
 

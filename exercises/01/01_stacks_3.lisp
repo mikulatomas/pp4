@@ -54,7 +54,6 @@ podprogramu zpět na programový zásobník.
 ;; funkce exec-sub
 ;;
 
-
 (defmethod exec-list ((op (eql '%sub)) args)
   (setf *exec* (append args *exec*)))
 
@@ -66,12 +65,8 @@ podprogramu zpět na programový zásobník.
 (defmethod exec-elem ((elem list))
   (exec-list (car elem) (cdr elem)))
 
-
 (defmethod exec-list (op args)
   (error "Unknown element on exec stack: ~s" (cons op args)))
-
-
-;; (vysvětlení k proměnné dspec:*redefinition-action* viz v předchozím souboru)
 
 
 ;; Definice podprogramů na aritmetické operace:
@@ -137,5 +132,7 @@ Výsledek je o něco čitelnější. Například faktoriál:
 (execute 6 11 -2 'sqdiscr :exec)
 
 |#
+
+
 
 

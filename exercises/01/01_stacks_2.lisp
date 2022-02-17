@@ -52,6 +52,7 @@
       (exec-word elem)
     (exec-symbol elem)))
 
+
 (setf dspec:*redefinition-action* :warn)
 
 #|
@@ -65,6 +66,8 @@
              '(:dup :* pi :*))
 
 |#
+
+
 
 
 
