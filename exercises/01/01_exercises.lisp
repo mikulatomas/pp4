@@ -7,7 +7,7 @@
 ;; -------
 
 (defmethod compile-op ((op (eql 'let)) args)
-    nil)
+    ...)
 
 #|
 (execute '(let ((a 2)) 
@@ -33,8 +33,8 @@
 ;;
 ;; Vykonává vrchní prvek zásobníku exec, dokud na vrcholu zásobníku exec zůstává Pravda. 
 
-;; Doplňte tělo zásobníhkového slova :loop
-(define-word :loop '())
+;; Definujte zásobníkové slovo :loop pomoci funkce define-word
+(define-word :loop ...)
 
 #|
 
@@ -70,7 +70,7 @@
 ;; -------
 
 (defmethod compile-op ((op (eql 'while)) args)
-  nil)
+  ...)
 
 
 #|
@@ -85,7 +85,7 @@
 ;; -------
 
 (defmethod compile-op ((op (eql 'dotimes)) args)
-  nil)
+  ...)
 
 #|
 (execute '(dotimes (i 10) 
