@@ -52,4 +52,4 @@
          :unbind
          :unbind)
 
-;; Synchronizujte procesy tak, aby se nejdříve vytisklo 1, 2 a až poté 2, 4.
+;; Synchronizujte procesy tak, aby se nejdříve vytisklo 1, 2 a až poté 3, 4.
