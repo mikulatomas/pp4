@@ -26,12 +26,11 @@
 ;;      print(n)        |   n = n + 1
 ;; ---------------------------------------------
 
-
 ;; a) Vytvořte historii, která výpíše posloupnosti 012, 002, 02.
 ;; b) Musí se hodnota 2 objevit ve výstupu vždy?
 ;; c) Kolikrát se může hodnota 2 objevit ve výstupu?
-;; c) Kolikrát se může hodnota 1 objevit ve výstupu?
-
+;; d) Kolikrát se může hodnota 1 objevit ve výstupu?
+;; -------
 
 ;; -------
 ;; 3. Výše zmíněný algoritmus vytvořte v jazyce scheme
