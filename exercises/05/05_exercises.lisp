@@ -19,5 +19,5 @@
 ;; Napište program který vytvoří n_sellers procesů, které prodávájí lístky, do te doby než budou všechny prodané.
 ;; Nakonci každý proces vypíše kolik jich prodal.
 
-;; Hint: dotimes, with-lock, while
+;; Hint: co-dotimes, with-lock, while
 ;; -------
