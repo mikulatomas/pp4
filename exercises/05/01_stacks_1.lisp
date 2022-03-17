@@ -127,7 +127,6 @@
 (define-word :print (lambda () (print (car *rslt*)))) 
 
 ;; Slovo :if pracuje tak, že upravuje vrchol zásobníku exec
-
 (defun tail (elem stack)
   "Vrací pokračování seznamu stack začínající prvkem elem. Přeskakuje bloky :if-:else-:then"
   (cond ((null stack) (error "Empty stack. "))

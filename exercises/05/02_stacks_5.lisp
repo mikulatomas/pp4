@@ -76,7 +76,7 @@ Proces je reprezentován jako pokračování.
 
 (defun execute (&rest code)
   (let ((*rslt* '())
-        (*exec* code)
+   (*exec* code)
         (*time* 0)
         (*rprs* '()))
     (loop 

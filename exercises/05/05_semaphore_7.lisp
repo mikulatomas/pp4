@@ -48,12 +48,13 @@ Semafor je reprezentován seznamem:
 
 (%sem value . blocked)
 
-kde value je nezáporné celé číslo a blocked je seznam procesů (pokračováních).
+kde value je hodnota semaforu (nezáporné celé číslo) a blocked je seznam procesů zablokovaných semaforem.
 |#
 
 ;; Semafor je hodnota:
 (defmethod exec-list ((op (eql '%sem)) args)
   (push (cons '%sem args) *rslt*))
+
 
 ;; Pomocné funkce:
 (defun take-running-process ()
@@ -62,9 +63,11 @@ kde value je nezáporné celé číslo a blocked je seznam procesů (pokračová
     (setf *exec* nil)))
 
 (defun take-blocked-process (semaphore)
-  (let ((process (nth (random (length (cddr semaphore))) (cddr semaphore))))
+  (let ((process (nth (random (length (cddr semaphore))) 
+                      (cddr semaphore))))
     (setf (cddr semaphore) (remove process (cddr semaphore)))
     process))
+
     
 
 ;; Vytvoření semaforu:
@@ -73,7 +76,7 @@ kde value je nezáporné celé číslo a blocked je seznam procesů (pokračová
                (let ((value (pop *rslt*)))
                  (unless (<= 0 value)
                    (error "Value can not be negative"))
-                 (push `(%sem ,value)
+                 (push (list '%sem value)
                        *rslt*))))
 
 
@@ -108,7 +111,7 @@ kde value je nezáporné celé číslo a blocked je seznam procesů (pokračová
 |#
 
 #|
-Deadlock:
+Vysvětlete:
 (execute 0 :sem :p 2 :print)
 |#
 
