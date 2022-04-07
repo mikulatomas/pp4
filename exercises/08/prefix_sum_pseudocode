@@ -1,0 +1,16 @@
+a = [1, 2, 3, 4, 5] #vstupni pole o delce n=5
+old = [0, 0, 0, 0, 0] # old[i] - predchozi hodnota souctu na indexu i, inicializujeme na old[i] = 0 for all i <= n
+result # vysledek prefix sum
+
+# Mejme i procesu, kod pro i-ty proces:
+d = 1
+result[i] = a[i]
+#synchronizace barierou
+# invariant SUM: sum[i] = (a[i-d+1] + ... + a[i])
+while (d < n):
+	old[i] = result[i]
+	# synchronizace barierou
+	if ((i - d) >= 0):
+		result[i] = old[i - d] + result[i]
+	# synchronizace barierou
+	d = 2 * d
