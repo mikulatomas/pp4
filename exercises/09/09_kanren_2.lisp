@@ -6,42 +6,41 @@
 ;;; fáze 1 - uživatelská vrstva
 ;;;
 
-;; Vždy splněný cíl a nikdy nesplněný cíl:
+;; Vždy splněný a nikdy nesplněný cíl.
 (defvar *success* (== t t))
 (defvar *fail* (== t nil))
 
-;; Disjunkce obecného počtu cílů.
+;; Disjunkce libovolného počtu cílů.
 (defun disj (&rest goals)
-  (if goals
-      (disj2 (car goals) (apply #'disj (cdr goals)))
-    *fail*))
+  (reduce #'disj2 goals :initial-value *fail* :from-end t))
 
 #|
-(apply-goal (disj (== ?1 'a) (== ?1 'b) (== ?1 'c)) *empty-state*)   
+(apply-goal (disj (== ?0 'a) (== ?0 'b) (== ?0 'c)) (state (sub) 1))   
 |#
 
-;; Konujunkce libovolného počtu číslů.
+;; Konujunkce libovolného počtu cílů.
 (defun conj (&rest goals)
-  (if goals
-      (conj2 (car goals) (apply #'conj (cdr goals)))
-    *success*))
+  (reduce #'conj2 goals :initial-value *success*))
 
 #|
-(apply-goal (conj (== ?1 'a) (== ?2 'b) (== ?3 'c)) *empty-state*) 
+(apply-goal (conj (== ?0 'a) (== ?1 'b) (== ?2 'c)) (state (sub) 3)) 
 |#
 
+;;
 ;; Makro conde
 ;;
+
 ;; Syntax: 
 ;; (conde
 ;;   ((goal11 goal12 ...))
 ;;   ...
 ;;   ((goaln1 goaln2 ...)))
 ;;
-;; Definuje cíl, který je splněn, pokud existuje číslo i takové,
-;; že jsou splněny všechny cíle goali1 goali2 ...
+;; Definuje cíl, který lze splnit tak, že se splní všechny cíle goali1 goali2 ... 
+;; pro nějaké i.
 ;;
-;; Jedná se o logickou obdobu makra cond.
+;; (Jedná se o logickou obdobu makra cond.)
+
 (defmacro conde (&body clauses)
   (if clauses
       `(disj (conj ,@(car clauses))
@@ -54,18 +53,21 @@
                (== ?1 'c))
               ((== ?0 'b)
                (== ?1 'd)))
-            `(state (sub (?0 . a)) 0))
+            (state (sub '(?0 . a)) 2))
 |#
 
 
-;; Makro na vytváření čerstvých proměnných
+;;
+;; Makro with-fresh
+;;
+
 ;; Syntax:
 ;; (with-fresh (var1 ... varn) . goals)
 ;;
-;; Definuje cíl, který je splněn, pokud jsou splněny všechny cíle goals.
+;; Definuje cíl, který lze splnit tak, že se splní všechny cíle goals.
 ;; Při určování cílů goals jsou k dispozici čerstvé proměnné
 ;; navázané na symboly var1, ..., varn. 
-;;               
+
 (defmacro with-fresh (vars &body body)
   (if vars
       `(call-fresh (lambda (,(car vars))
@@ -82,7 +84,10 @@
 |#
 
 
-;; Rekurzivní dosazování do termu. 
+;;
+;; Dosazování do termů
+;;
+
 (defmethod structure-walk ((term cons) sub)
   (cons (recursive-walk (car term) sub)
         (recursive-walk (cdr term) sub)))
@@ -99,15 +104,15 @@
 |#
 
 ;;
-;; Funkce, kterou bude volat uživatel.
+;; Makro run
 ;;
 
-;; Syntax: (run n (var1 ... varn) . formulas)
+;; Syntax: (run n (var1 ... varn) . goals)
 ;; - n je číslo nebo t
 ;; - var1 ... varn jsou symboly
-;; – formulas je seznam logických fomulí.
+;; – goals je seznam výrazů.
 ;;
-;; Makro vyhodnotí formule v prostředí, 
+;; Makro vyhodnotí výrazy goals v prostředí, 
 ;; kde na symboly var1 ... varn, budou navázány na čersvé proměnné.
 ;;
 ;; Tím obdrží cíle.
@@ -158,7 +163,7 @@
 ;; Příklad - seznamy
 ;;
 
-;; Predikáty jsou lispové funkce. Na konec názvu funkce budeme dávat písmeno 'o',
+;; Cíle vytváříme pomocí lispových funkcí. Na konec názvu funkce budeme dávat písmeno 'o',
 ;; aby nedošlo ke konfliktu s existujícími funkcemi.
 
 ;; Predikát nullo je splněn, pokud je x hodnota nil.
@@ -188,9 +193,9 @@
 (defun membero (el list)
   (with-fresh (first rest)
     (conso first rest list)
-    (conde
-      ((== el first))
-      ((membero el rest)))))
+    (disj
+      (== el first)
+      (membero el rest))))
      
 #|
 (run t (x)
@@ -208,7 +213,7 @@
         (membero x '(2 3 4))))
 
 ;; Prohledáváním do hlouhky obdržíme jiné pořadí výsledků: 
-(let ((*dfs* t))
+(let ((*dfsp* t))
   (run t (x)
     (disj (membero x '(1 2 3))
           (membero x '(2 3 4)))))
